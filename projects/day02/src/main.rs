@@ -1,36 +1,52 @@
-use std::io;
+use std::io::{self, stdout};
 
+use fern::InitError;
+use log::{error, info};
 use rand::Rng;
 
+fn setup_logger() -> Result<(), InitError> {
+    fern::Dispatch::new()
+        .format(|out, msg, record| out.finish(format_args!("[{}] {}", record.level(), msg)))
+        .chain(stdout())
+        .apply()?;
+    Ok(())
+}
+
 fn main() {
+    setup_logger().expect("Failed to configure logger");
+
     let secret = rand::thread_rng().gen_range(1..=128);
 
-    println!("Guess the number");
+    info!("Wanna play a game? Guess the number...");
 
     loop {
-        println!("Your try:");
+        info!("You choice:");
 
         let mut guess = String::new();
-        io::stdin()
-            .read_line(&mut guess)
-            .expect("failed to read line");
+        match io::stdin().read_line(&mut guess) {
+            Ok(_) => {}
+            Err(err) => {
+                error!("Failed to read the line: {err}");
+                continue;
+            }
+        }
 
         let guess: i32 = match guess.trim().parse() {
             Ok(num) => num,
-            Err(_) => {
-                println!("It should be a number.");
+            Err(err) => {
+                error!("Failed to parse a number: {}", err);
                 continue;
             }
         };
 
-        println!("Guess is: {guess}");
+        info!("Guess is: {guess}");
 
         match guess.cmp(&secret) {
-            std::cmp::Ordering::Less => println!("Small."),
-            std::cmp::Ordering::Greater => println!("Greater than expected."),
+            std::cmp::Ordering::Less => info!("Yor guess is smaller."),
+            std::cmp::Ordering::Greater => info!("Your guess is greater."),
             std::cmp::Ordering::Equal => {
-                println!("Equal! Good One.");
-                println!("You're rock!");
+                info!("Equal! Good One.");
+                info!("You're rock!");
                 break;
             }
         }
