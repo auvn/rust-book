@@ -1,10 +1,9 @@
 use std::io::{self, stdout};
 
-use fern::InitError;
 use log::{error, info};
 use rand::Rng;
 
-fn setup_logger() -> Result<(), InitError> {
+fn setup_logger() -> Result<(), fern::InitError> {
     fern::Dispatch::new()
         .format(|out, msg, record| out.finish(format_args!("[{}] {}", record.level(), msg)))
         .chain(stdout())
