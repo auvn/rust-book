@@ -1,6 +1,6 @@
 use std::io::stdout;
 
-use log::{debug, info};
+use log::info;
 
 fn setup_logger() -> Result<(), fern::InitError> {
     fern::Dispatch::new()
