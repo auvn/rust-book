@@ -1,8 +1,5 @@
-use log::{info};
-use std::{
-    f64::consts::PI,
-    io::{stdout},
-};
+use log::info;
+use std::{f64::consts::PI, io::stdout};
 
 fn setup_logger() -> Result<(), fern::InitError> {
     fern::Dispatch::new()
@@ -19,8 +16,8 @@ fn main() {
     let c2 = Circle::from_diameter(10);
     // let c3 = Circle::from_diameter(1);
 
-    info!("c1 {:?} area is: {}", c1, c1.area());
-    info!("c2 {:?} area is: {}", c2, c2.area());
+    info!("{:?} area is: {}", c1, c1.area());
+    info!("{:?} area is: {}", c2, c2.area());
     // info!("c3 {:?}", c3);
 }
 
